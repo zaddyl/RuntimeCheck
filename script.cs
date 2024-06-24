@@ -18,6 +18,8 @@ List<IMyBeacon> beaC = new List<IMyBeacon>();
 List<IMyPowerProducer> pwrProduc = new List<IMyPowerProducer>();
 List<IMyGasGenerator> gasGen = new List<IMyGasGenerator>();
 List<IMyGyro> gyRo = new List<IMyGyro>();
+List<IMyTerminalBlock> all = new List<IMyTerminalBlock>();
+IMyProgrammableBlock dockGroup;
 MyIni _ini = new MyIni();
 string errTxt = "";
 List<IMyShipConnector> otherConnect = new List<IMyShipConnector>();
@@ -29,6 +31,7 @@ public Program(){
     scriptDisplay("Grid Config");
     setStat(true);
     mainConnect = GridTerminalSystem.GetBlockWithId(NameToId("MainConnect", "Connector")) as IMyShipConnector;
+    dockGroup = GridTerminalSystem.GetBlockWithId(NameToId("MainConnect", "Connector")) as IMyProgrammableBlock;
     if (mainConnect == null) { errTxt += "Need Main-connect name to prevent setting error."; return; }
     List<IMyShipConnector> allConnect = new List<IMyShipConnector>();
     GridTerminalSystem.GetBlocksOfType(allConnect);
@@ -39,51 +42,52 @@ public Program(){
 
 public void Main(string argument) {
     errTxt = "";
-    if (argument == "") { errTxt += "Waiting for reconnect...\n"; mainConnect.Disconnect(); foreach (var c in otherConnect) { c.Disconnect(); } TB.StartCountdown(); }
+    if (argument == "") { errTxt += "Waiting for reconnect...\n"; foreach (var c in otherConnect) { c.Disconnect(); }  mainConnect.Disconnect(); TB.Trigger(); }
     else if (argument == "Start")
     {
         _ini.Clear(); _ini.TryParse(Me.CustomData);
-        _ini.DeleteSection("Battery");
+        delKeys("Battery");
         GridTerminalSystem.GetBlocksOfType(pwr);
         if (pwr.Count != 0)
         { foreach (var p in pwr) { _ini.Set("Battery", p.CustomName, p.EntityId); } }
-        _ini.DeleteSection("O2Tank");
+        delKeys("O2Tank");
         GridTerminalSystem.GetBlocksOfType(gasTank);
         if (gasTank.Count != 0)
         { foreach (var o in gasTank) { if (o.BlockDefinition.SubtypeId.Contains("Oxygen") || o.BlockDefinition.SubtypeId == "") { _ini.Set("O2Tank", o.CustomName, o.EntityId); } } }
-        _ini.DeleteSection("H2Tank");
+        delKeys("H2Tank");
         GridTerminalSystem.GetBlocksOfType(gasTank);
         if (gasTank.Count != 0)
         { foreach (var h in gasTank) { if (h.BlockDefinition.SubtypeId.Contains("Hydrogen")) { _ini.Set("H2Tank", h.CustomName, h.EntityId); } } }
-        _ini.DeleteSection("Thruster");
+        delKeys("Thruster");
         GridTerminalSystem.GetBlocksOfType(ts);
         if (ts.Count != 0)
         { foreach (var t in ts) { _ini.Set("Thruster", t.CustomName, t.EntityId); } }
-        _ini.DeleteSection("Inventory");
+        delKeys("Inventory");
         GridTerminalSystem.GetBlocksOfType(inv);
         if (inv.Count != 0)
         { foreach (var i in inv) { if (i.HasInventory) { _ini.Set("Inventory", i.CustomName, i.EntityId); } } }
-        _ini.DeleteSection("RadioAntenna");
+        delKeys("RadioAntenna");
         GridTerminalSystem.GetBlocksOfType(anT);
         if (anT.Count != 0)
         { foreach (var a in anT) { _ini.Set("RadioAntenna", a.CustomName, a.EntityId); } }
-        _ini.DeleteSection("Beacon");
+        delKeys("Beacon");
         GridTerminalSystem.GetBlocksOfType(beaC);
         if (beaC.Count != 0)
         { foreach (var b in beaC) { _ini.Set("Beacon", b.CustomName, b.EntityId); } }
-        _ini.DeleteSection("PWRProducer");
+        delKeys("PWRProducer");
         GridTerminalSystem.GetBlocksOfType(pwrProduc);
         if (pwrProduc.Count != 0)
         { foreach (var p in pwrProduc) { if (!p.BlockDefinition.TypeIdString.Contains("Battery")) { _ini.Set("PWRProducer", p.CustomName, p.EntityId); } } }
-        _ini.DeleteSection("GasGenerator");
+        delKeys("GasGenerator");
         GridTerminalSystem.GetBlocksOfType(gasGen);
         if (gasGen.Count != 0)
         { foreach (var g in gasGen) { _ini.Set("GasGenerator", g.CustomName, g.EntityId); } }
-        _ini.DeleteSection("Gyro");
+        delKeys("Gyro");
         GridTerminalSystem.GetBlocksOfType(gyRo);
         if (gyRo.Count != 0)
         { foreach (var g in gyRo) { _ini.Set("Gyro", g.CustomName, g.EntityId); } }
         Me.CustomData = _ini.ToString();
+        mainConnect.Connect();
         foreach (var c in otherConnect) { c.Connect(); }
         errTxt += "Initialization completed.";
     }
@@ -95,8 +99,7 @@ public void Main(string argument) {
         foreach (var key in getBlocks("Gyro")) { IMyGyro g = GridTerminalSystem.GetBlockWithId(key) as IMyGyro; g.Enabled = false; }
         errTxt += "Dock-on setting applied.";
     }
-    else if (argument == "DockOff")
-    {
+    else if (argument == "DockOff") {
         foreach (var key in getBlocks("Thruster")) { IMyThrust t = GridTerminalSystem.GetBlockWithId(key) as IMyThrust; t.Enabled = true; }
         foreach (var key in getBlocks("Battery")) { IMyBatteryBlock b = GridTerminalSystem.GetBlockWithId(key) as IMyBatteryBlock; b.ChargeMode = ChargeMode.Auto; }
         foreach (var key in getBlocks("Beacon")) { IMyBeacon b = GridTerminalSystem.GetBlockWithId(key) as IMyBeacon; b.Enabled = true; }
@@ -167,4 +170,11 @@ void scriptDisplay(string scriptTitle)
     Me.GetSurface(1).Alignment = TextAlignment.CENTER;
     Me.GetSurface(1).ContentType = ContentType.TEXT_AND_IMAGE;
     Me.GetSurface(1).WriteText("\n" + scriptTitle);
+}
+
+void delKeys(string section)
+{
+    List<MyIniKey> keys = new List<MyIniKey>();
+    _ini.GetKeys(section, keys);
+    foreach (var key in keys) { _ini.Delete(key); }
 }
