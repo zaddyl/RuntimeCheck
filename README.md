@@ -4,14 +4,20 @@ This script will auto-save specified entitys to customdata for calling;
 Inludes thuster, battery, o2tank, h2tank, block that has inventory, antenna, beacon, power-generator, gas-generator, gyro
 plz enter follow module's name after first run:
 1.The connector for parking
-2.the timer-block for counting down
+2.The timer-block for counting down
+Then set timer-block's action to run this pb with argument "Start"
+And if run this script with "DockOn", it'll set battery to "Recharge", thruster to "turn-off", beacon to "turn-off", gyro to "turn-off" and vice versa for argument "Dockoff".
 DO NOT MOVE your grid when initializing
 Script will disconnect all of the connector then re-connect after 1 sec
 
-¾W¸ñ³õÊ¼»¯Ä_±¾£¬Ô“Ä_±¾•şŒ¢Ö¸¶¨ŒówµÄID´æƒ¦µ½×Ô¶¨Áx”µ“şÖĞ
-Ä¿Ç°°üÀ¨£ºÍÆßMÆ÷¡¢ëŠ³Ø¡¢Ñõšâ¹Ş¡¢šäšâ¹Ş¡¢ì´æÄ£‰K¡¢Ìì¾€¡¢ĞÅ˜Ë¡¢°lëŠÄ£‰K¡¢®ašâÄ£‰K¡¢ÍÓÂİƒx
-ÕˆÔÚÊ×´Îß\ĞĞáá£¬ÓÚ×Ô¶¨Áx”µ“şÖĞİ”ÈëÈçÏÂ·½‰KµÄÃû×Ö£º
-1¡¢Í£²´ÓÃßB½ÓÆ÷£»
-2¡¢ÓÃì¶Ó‹•rÖØßBµÄÓ‹•rÆ÷£»
-ÕˆÎğÔÚ³õÊ¼»¯•rÒÆ„Ó¾W¸ñ£¬Ä_±¾•şÔÚˆÌĞĞ•r”àé_ËùÓĞßB½ÓÆ÷¡¢Kì¶1ÃëááÖØßB
+ç¶²æ ¼åˆå§‹åŒ–è…³æœ¬ï¼Œè©²è…³æœ¬æœƒå°‡æŒ‡å®šå¯¦é«”çš„IDå­˜å„²åˆ°è‡ªå®šç¾©æ•¸æ“šä¸­
+ç›®å‰åŒ…æ‹¬ï¼šæ¨é€²å™¨ã€é›»æ± ã€æ°§æ°£ç½ã€æ°«æ°£ç½ã€åº«å­˜æ¨¡å¡Šã€å¤©ç·šã€ä¿¡æ¨™ã€ç™¼é›»æ¨¡å¡Šã€ç”¢æ°£æ¨¡å¡Šã€é™€èºå„€
+è«‹åœ¨é¦–æ¬¡é‹è¡Œå¾Œï¼Œäºè‡ªå®šç¾©æ•¸æ“šä¸­è¼¸å…¥å¦‚ä¸‹æ–¹å¡Šçš„åå­—ï¼š
+1ã€åœæ³Šç”¨é€£æ¥å™¨
+2ã€ç”¨æ–¼è¨ˆæ™‚é‡é€£çš„è¨ˆæ™‚å™¨
+å†çµ¦ç”¨æ–¼çš„è¨ˆæ™‚å™¨è¨­ç½®å‹•ä½œâ€”â€”ä»¥â€œStartâ€åƒæ•¸é‹è¡Œè©²è…³æœ¬
+
+ä½¿ç”¨â€œDockonâ€åƒæ•¸é‹è¡Œæ­¤è…³æœ¬ï¼Œæœƒè®€å–è‡ªå®šç¾©æ•¸æ“šä¸­çš„confï¼Œå°‡é›»æ± çµ„è¨­ç‚ºâ€œå……é›»â€ã€æ¨é€²å™¨çµ„è¨­ç‚ºâ€œé—œé–‰â€ã€ä¿¡æ¨™è¨­ç‚ºâ€œé—œé–‰â€ã€é™€èºå„€ä¹Ÿè¨­ç‚ºâ€œé—œé–‰â€
+ä½¿ç”¨â€œDockoffâ€åä¹‹
+è«‹å‹¿åœ¨åˆå§‹åŒ–æ™‚ç§»å‹•ç¶²æ ¼ï¼Œè…³æœ¬æœƒåœ¨åŸ·è¡Œæ™‚æ–·é–‹æ‰€æœ‰é€£æ¥å™¨ã€ä¸¦æ–¼1ç§’å¾Œé‡é€£
 

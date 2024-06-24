@@ -4,7 +4,7 @@
 //plz enter follow module's name after first run:
 //1.The connector for parking
 //2.The timer-block for counting down
-//3.Then set timer-block's action to run this pb with argument "Start"
+//Then set timer-block's action to run this pb with argument "Start"
 //And if run this script with "DockOn", it'll set battery to "Recharge", thruster to "turn-off", beacon to "turn-off", gyro to "turn-off" and vice versa for argument "Dockoff".
 //DO NOT MOVE your grid when initializing
 //Script will disconnect all of the connector then re-connect after 1 sec
