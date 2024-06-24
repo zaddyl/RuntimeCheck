@@ -3,7 +3,9 @@
 //Inludes thuster, battery, o2tank, h2tank, block that has inventory, antenna, beacon, power-generator, gas-generator, gyro
 //plz enter follow module's name after first run:
 //1.The connector for parking
-//2.the timer-block for counting down
+//2.The timer-block for counting down
+//3.Then set timer-block's action to run this pb with argument "Start"
+//And if run this script with "DockOn", it'll set battery to "Recharge", thruster to "turn-off", beacon to "turn-off", gyro to "turn-off" and vice versa for argument "Dockoff".
 //DO NOT MOVE your grid when initializing
 //Script will disconnect all of the connector then re-connect after 1 sec
 
@@ -37,8 +39,8 @@ public Program(){
 
 public void Main(string argument) {
     errTxt = "";
-    if (argument == "") { errTxt += "Waiting for reconnect...\n"; mainConnect.Disconnect(); foreach (var c in otherConnect) { c.Disconnect(); } TB.StartCountdown(); Echo(errTxt); }
-    else
+    if (argument == "") { errTxt += "Waiting for reconnect...\n"; mainConnect.Disconnect(); foreach (var c in otherConnect) { c.Disconnect(); } TB.StartCountdown(); }
+    else if (argument == "Start")
     {
         _ini.Clear(); _ini.TryParse(Me.CustomData);
         _ini.DeleteSection("Battery");
@@ -84,8 +86,37 @@ public void Main(string argument) {
         Me.CustomData = _ini.ToString();
         foreach (var c in otherConnect) { c.Connect(); }
         errTxt += "Initialization completed.";
-        Echo(errTxt);
     }
+    else if (argument == "DockOn")
+    {
+        foreach (var key in getBlocks("Thruster")) { IMyThrust t = GridTerminalSystem.GetBlockWithId(key) as IMyThrust; t.Enabled = false; }
+        foreach (var key in getBlocks("Battery")) { IMyBatteryBlock b = GridTerminalSystem.GetBlockWithId(key) as IMyBatteryBlock; b.ChargeMode = ChargeMode.Recharge; }
+        foreach (var key in getBlocks("Beacon")) { IMyBeacon b = GridTerminalSystem.GetBlockWithId(key) as IMyBeacon; b.Enabled = false; }
+        foreach (var key in getBlocks("Gyro")) { IMyGyro g = GridTerminalSystem.GetBlockWithId(key) as IMyGyro; g.Enabled = false; }
+        errTxt += "Dock-on setting applied.";
+    }
+    else if (argument == "DockOff")
+    {
+        foreach (var key in getBlocks("Thruster")) { IMyThrust t = GridTerminalSystem.GetBlockWithId(key) as IMyThrust; t.Enabled = true; }
+        foreach (var key in getBlocks("Battery")) { IMyBatteryBlock b = GridTerminalSystem.GetBlockWithId(key) as IMyBatteryBlock; b.ChargeMode = ChargeMode.Auto; }
+        foreach (var key in getBlocks("Beacon")) { IMyBeacon b = GridTerminalSystem.GetBlockWithId(key) as IMyBeacon; b.Enabled = true; }
+        foreach (var key in getBlocks("Gyro")) { IMyGyro g = GridTerminalSystem.GetBlockWithId(key) as IMyGyro; g.Enabled = true; }
+        errTxt += "Dock-off setting applied.";
+    }
+    Echo(errTxt);
+}
+
+List<long> getBlocks(string section)
+{
+    List<long> keyls = new List<long>();
+    _ini.TryParse(Me.CustomData);
+    List<MyIniKey> Keys = new List<MyIniKey>(); _ini.GetKeys(section, Keys);
+    if (!_ini.ContainsSection(section)) { return keyls; }
+    foreach (var key in Keys)
+    {
+        keyls.Add(_ini.Get(key).ToInt64());
+    }
+    return keyls;
 }
 
 long NameToId(string section, string key)
