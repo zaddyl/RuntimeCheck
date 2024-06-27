@@ -1,4 +1,4 @@
-# ShipInitialization_for_SpaceEngineers
+# RuntimeCheck_for_SpaceEngineers
 This script's for monitoring every system which's registered.
 Just give the script which you wanna check a timer block to hold in triggering
   
