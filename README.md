@@ -6,3 +6,5 @@ Just give the script which you wanna check a timer block to hold in triggering
 只需要提供該腳本需監測系統對應的計時器，並保持觸發態即可  
   
 argument:(string)TimerBlockId, System'sName
+  
+參數：(string)計時器ID, 系統名
